@@ -1,0 +1,32 @@
+﻿@model IEnumerable<MetersMVC.ViewModels.MeterReadingViewModel>
+
+<!-- Bootstrap styling for table -->
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Meter Readings</h2>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Reading</th>
+                <th>Reading Date</th>
+                <th>Meter ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reading in Model)
+            {
+                <tr>
+                    <td>@reading.Reading</td>
+                    <td>@reading.ReadingDate.ToString("dd-MM-yyyy")</td>
+                    <td>@reading.MeterId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Back to List button with styling -->
+    <div class="text-center mt-4">
+        <a href="https://localhost:7023/Meters" class="btn btn-primary btn-lg">Back to Meters List</a>
+    </div>
+</div>
+

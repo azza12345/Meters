@@ -1,0 +1,17 @@
+﻿@using MetersMVC.ViewModels
+@model MetersMVC.ViewModels.MeterReadingViewModel
+
+<h2>Add Reading for Meter ID: @Model.MeterId</h2>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="MeterId" />
+    <div>
+        <label asp-for="Reading"></label>
+        <input asp-for="Reading" />
+    </div>
+    <div>
+        <label asp-for="ReadingDate"></label>
+        <input asp-for="ReadingDate" type="datetime" />
+    </div>
+    <button type="submit">Add Reading</button>
+</form>

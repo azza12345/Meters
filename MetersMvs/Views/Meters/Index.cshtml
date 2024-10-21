@@ -1,0 +1,55 @@
+﻿@using MetersMVC.ViewModels
+@model IEnumerable<MeterViewModel>
+
+@{
+    ViewData["Title"] = "Meters List";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Meters List</h2>
+
+    <!-- Button to create a new meter, styled with Bootstrap -->
+    <div class="text-right mb-3">
+        <a asp-action="Create" class="btn btn-success btn-lg">Create New Meter</a>
+    </div>
+
+    <!-- Styled table using Bootstrap -->
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Create Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var meter in Model)
+            {
+                <tr>
+                    <td>@meter.Id</td>
+                    <td>@meter.Type</td>
+                    <td>@meter.Model</td>
+                    <td>@meter.Year</td>
+                    <td>@meter.CreateDate.ToString("dd-MM-yyyy")</td>
+                    <td>
+                        <!-- Edit button -->
+                        <a asp-action="Edit" asp-route-id="@meter.Id" class="btn btn-warning btn-sm">Edit</a>
+
+                        <!-- Delete button -->
+                        <a asp-action="Delete" asp-route-id="@meter.Id" class="btn btn-danger btn-sm">Delete</a>
+
+                        <!-- Details button -->
+                        <a asp-action="Details" asp-route-id="@meter.Id" class="btn btn-info btn-sm">Details</a>
+
+                        <!-- Add Reading button -->
+                        <a asp-action="AddReading" asp-controller="MeterReading" asp-route-meterId="@meter.Id" class="btn btn-primary btn-sm">Add Reading</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
