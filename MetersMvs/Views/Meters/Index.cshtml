@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Meters.ViewModels.MeterViewModel>
+
+@{
+    ViewData["Title"] = "Meters List";
+}
+
+<h1>Meters List</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Type</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Create Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var meter in Model)
+        {
+            <tr>
+                <td>@meter.Id</td>
+                <td>@meter.Type</td>
+                <td>@meter.Model</td>
+                <td>@meter.Year</td>
+                <td>@meter.CreateDate.ToString()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@meter.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@meter.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Details" asp-route-id="@meter.Id" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
