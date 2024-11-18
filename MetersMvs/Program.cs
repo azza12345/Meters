@@ -3,6 +3,7 @@ using Business;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using MetersMVC;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Serilog;
@@ -15,7 +16,7 @@ namespace MetersMVC
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
- 
+
 
 
             // Add services to the container.
@@ -35,7 +36,7 @@ namespace MetersMVC
               
 
             builder.Services.AddDbContext<MeterDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
             var mappingProfile = new MapperConfiguration(m =>
@@ -47,6 +48,7 @@ namespace MetersMVC
 
             IMapper mapper = mappingProfile.CreateMapper();
             builder.Services.AddSingleton(mapper);
+
             builder.Services.AddScoped<IMeterRepository, MeterRepository>();
             builder.Services.AddScoped<IMeterService, MeterService>();
             builder.Services.AddScoped<IMeterReadingRepository, MeterReadingRepository>();
@@ -106,4 +108,4 @@ namespace MetersMVC
             app.Run();
         }
     }
-    }
+}

@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -29,7 +31,7 @@ namespace Infrastructure.Repositories
             try
             {
                 _logger.LogInformation("Fetching all meter readings.");
-                var meterReadings = await _context.MeterReadings.Include(mr => mr.Meter).ToListAsync();
+            var meterReadings = await _context.MeterReadings.Include(mr => mr.Meter).ToListAsync();
                 var mappedReadings = _mapper.Map<IEnumerable<MeterReading>>(meterReadings);
                 _logger.LogInformation("Successfully fetched all meter readings.");
                 return mappedReadings;
@@ -46,14 +48,14 @@ namespace Infrastructure.Repositories
             try
             {
                 _logger.LogInformation("Fetching meter reading with ID {Id}.", id);
-                var meterReading = await _context.MeterReadings.Include(mr => mr.Meter)
-                    .FirstOrDefaultAsync(mr => mr.Id == id);
+            var meterReading = await _context.MeterReadings.Include(mr => mr.Meter)
+                .FirstOrDefaultAsync(mr => mr.Id == id);
                 if (meterReading == null)
                 {
                     _logger.LogWarning("Meter reading with ID {Id} not found.", id);
                 }
-                return _mapper.Map<MeterReading>(meterReading);
-            }
+            return _mapper.Map<MeterReading>(meterReading);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while fetching meter reading with ID {Id}.", id);
@@ -66,16 +68,16 @@ namespace Infrastructure.Repositories
             try
             {
                 _logger.LogInformation("Adding a new meter reading.");
-                var meterReadingEntity = _mapper.Map<MeterReadingEntity>(meterReading);
+            var meterReadingEntity = _mapper.Map<MeterReadingEntity>(meterReading);
                 await _context.MeterReadings.AddAsync(meterReadingEntity);
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
                 _logger.LogInformation("Successfully added a new meter reading.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while adding a new meter reading.");
                 throw; // Rethrow to handle at a higher level
-            }
+        }
         }
 
         public async Task UpdateMeterReading(MeterReading meterReading)
@@ -83,9 +85,9 @@ namespace Infrastructure.Repositories
             try
             {
                 _logger.LogInformation("Updating meter reading with ID {Id}.", meterReading.Id);
-                var meterReadingEntity = _mapper.Map<MeterReadingEntity>(meterReading);
-                _context.MeterReadings.Update(meterReadingEntity);
-                await _context.SaveChangesAsync();
+            var meterReadingEntity = _mapper.Map<MeterReadingEntity>(meterReading);
+            _context.MeterReadings.Update(meterReadingEntity);
+            await _context.SaveChangesAsync();
                 _logger.LogInformation("Successfully updated meter reading with ID {Id}.", meterReading.Id);
             }
             catch (Exception ex)
@@ -100,23 +102,23 @@ namespace Infrastructure.Repositories
             try
             {
                 _logger.LogInformation("Deleting meter reading with ID {Id}.", id);
-                var meterReadingEntity = await _context.MeterReadings.FindAsync(id);
-                if (meterReadingEntity != null)
-                {
-                    _context.MeterReadings.Remove(meterReadingEntity);
-                    await _context.SaveChangesAsync();
+            var meterReadingEntity = await _context.MeterReadings.FindAsync(id);
+            if (meterReadingEntity != null)
+            {
+                _context.MeterReadings.Remove(meterReadingEntity);
+                await _context.SaveChangesAsync();
                     _logger.LogInformation("Successfully deleted meter reading with ID {Id}.", id);
                 }
                 else
                 {
                     _logger.LogWarning("Meter reading with ID {Id} not found for deletion.", id);
-                }
             }
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting meter reading with ID {Id}.", id);
                 throw; // Rethrow to handle at a higher level
             }
-        }
     }
+}
 }

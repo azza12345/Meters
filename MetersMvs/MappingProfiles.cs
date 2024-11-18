@@ -9,7 +9,9 @@ namespace MetersMVC
     {
         public MappingProfiles()
         {
-            
+            CreateMap<MeterEntity, Meter>().ReverseMap();
+            CreateMap<MeterReadingEntity, MeterReading>().ReverseMap();
+
             
             CreateMap<Meter, MeterViewModel>().ReverseMap();
             
@@ -26,7 +28,7 @@ namespace MetersMVC
             CreateMap<MeterEntity, Meter>()
            .ReverseMap();
 
-          
+
 
         }
     }

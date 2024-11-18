@@ -11,23 +11,24 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class MeterRepository : IMeterRepository
-    {
-        private readonly MeterDbContext _context;
-        private readonly IMapper _mapper;
+   
+        public class MeterRepository : IMeterRepository
+        {
+            private readonly MeterDbContext _context;
+            private readonly IMapper _mapper;
         private readonly ILogger<MeterRepository> _logger;
-        
+
 
         public MeterRepository(MeterDbContext context, IMapper mapper, ILogger<MeterRepository> logger)
-        {
-            _context = context;
-            _mapper = mapper;
+            {
+                _context = context;
+                _mapper = mapper;
             _logger = logger;
          
-        }
+            }
 
-        public async Task<IEnumerable<Core.Models.Meter>> GetAllMeters()
-        {
+            public async Task<IEnumerable<Core.Models.Meter>> GetAllMeters()
+            {
             try
             {
                 _logger.LogInformation("Fetching all meters.");
@@ -42,7 +43,7 @@ namespace Infrastructure.Repositories
                 throw; // Rethrow to handle at a higher level
             }
         }
-
+               
 
         //public async Task<IEnumerable<Core.Models.Meter>> GetAllMeters()
         //{
@@ -69,8 +70,8 @@ namespace Infrastructure.Repositories
         //    }
         //}
 
-        public async Task<Core.Models.Meter> GetMeterById(int id)
-        {
+            public async Task<Core.Models.Meter> GetMeterById(int id)
+            {
             try
             {
                 _logger.LogInformation("Fetching meter with ID {Id}.", id);
@@ -88,8 +89,8 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task AddMeter(Core.Models.Meter meter)
-        {
+            public async Task AddMeter(Core.Models.Meter meter)
+            {
             try
             {
                 _logger.LogInformation("Adding a new meter.");
@@ -103,10 +104,10 @@ namespace Infrastructure.Repositories
                 _logger.LogError(ex, "An error occurred while adding a new meter.");
                 throw; // Rethrow to handle at a higher level
             }
-        }
+            }
 
-        public async Task UpdateMeter(Core.Models.Meter meter)
-        {
+            public async Task UpdateMeter(Core.Models.Meter meter)
+            {
             try
             {
                 _logger.LogInformation("Updating meter with ID {Id}.", meter.Id);
@@ -120,10 +121,10 @@ namespace Infrastructure.Repositories
                 _logger.LogError(ex, "An error occurred while updating meter with ID {Id}.", meter.Id);
                 throw; // Rethrow to handle at a higher level
             }
-        }
+            }
 
-        public async Task DeleteMeter(int id)
-        {
+            public async Task DeleteMeter(int id)
+            {
             try
             {
                 _logger.LogInformation("Deleting meter with ID {Id}.", id);
@@ -143,7 +144,9 @@ namespace Infrastructure.Repositories
             {
                 _logger.LogError(ex, "An error occurred while deleting meter with ID {Id}.", id);
                 throw; // Rethrow to handle at a higher level
+                }
             }
         }
+
     }
-}
+

@@ -1,6 +1,7 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Core.Interfaces;
-using Core.Models;
+using Core.Models; 
 using Meters.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -32,11 +33,11 @@ namespace Meters.Controllers
             try
             {
                 _logger.LogInformation("Fetching all meter readings.");
-                var meterReadings = await _meterReadingService.GetAllMeterReadings();
-                var meterReadingViewModels = _mapper.Map<IEnumerable<MeterReadingViewModel>>(meterReadings);
+            var meterReadings = await _meterReadingService.GetAllMeterReadings();
+            var meterReadingViewModels = _mapper.Map<IEnumerable<MeterReadingViewModel>>(meterReadings);
                 _logger.LogInformation("Successfully fetched all meter readings.");
-                return Ok(meterReadingViewModels);
-            }
+            return Ok(meterReadingViewModels);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving meter readings.");
@@ -51,17 +52,17 @@ namespace Meters.Controllers
             try
             {
                 _logger.LogInformation("Fetching meter reading with ID {Id}.", id);
-                var meterReading = await _meterReadingService.GetMeterReadingById(id);
-                if (meterReading == null)
-                {
+            var meterReading = await _meterReadingService.GetMeterReadingById(id);
+            if (meterReading == null)
+            {
                     _logger.LogWarning("Meter reading with ID {Id} not found.", id);
-                    return NotFound();
-                }
-
-                var meterReadingViewModel = _mapper.Map<MeterReadingViewModel>(meterReading);
-                _logger.LogInformation("Successfully fetched meter reading with ID {Id}.", id);
-                return Ok(meterReadingViewModel);
+                return NotFound();
             }
+
+            var meterReadingViewModel = _mapper.Map<MeterReadingViewModel>(meterReading);
+                _logger.LogInformation("Successfully fetched meter reading with ID {Id}.", id);
+            return Ok(meterReadingViewModel);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving meter reading with ID {Id}.", id);
@@ -75,19 +76,19 @@ namespace Meters.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
+            if (!ModelState.IsValid)
+            {
                     _logger.LogWarning("Invalid model state while creating a new meter reading.");
-                    return BadRequest(ModelState);
-                }
+                return BadRequest(ModelState);
+            }
 
                 _logger.LogInformation("Creating a new meter reading.");
-                var meterReadingEntity = _mapper.Map<MeterReading>(meterReadingViewModel);
-                await _meterReadingService.AddMeterReading(meterReadingEntity);
+            var meterReadingEntity = _mapper.Map<MeterReading>(meterReadingViewModel);
+            await _meterReadingService.AddMeterReading(meterReadingEntity);
                 _logger.LogInformation("Successfully created a new meter reading.");
 
-                return CreatedAtAction(nameof(GetMeterReading), new { id = meterReadingEntity.Id }, meterReadingViewModel);
-            }
+            return CreatedAtAction(nameof(GetMeterReading), new { id = meterReadingEntity.Id }, meterReadingViewModel);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating a new meter reading.");
@@ -101,25 +102,25 @@ namespace Meters.Controllers
         {
             try
             {
-                if (id != meterReadingViewModel.Id)
-                {
+            if (id != meterReadingViewModel.Id)
+            {
                     _logger.LogWarning("Meter reading ID mismatch. URL ID {Id} does not match model ID {ModelId}.", id, meterReadingViewModel.Id);
                     return BadRequest("Meter reading ID mismatch.");
-                }
+            }
 
-                if (!ModelState.IsValid)
-                {
+            if (!ModelState.IsValid)
+            {
                     _logger.LogWarning("Invalid model state while updating meter reading with ID {Id}.", id);
-                    return BadRequest(ModelState);
-                }
+                return BadRequest(ModelState);
+            }
 
                 _logger.LogInformation("Updating meter reading with ID {Id}.", id);
-                var meterReadingEntity = _mapper.Map<MeterReading>(meterReadingViewModel);
-                await _meterReadingService.UpdateMeterReading(meterReadingEntity);
+            var meterReadingEntity = _mapper.Map<MeterReading>(meterReadingViewModel);
+            await _meterReadingService.UpdateMeterReading(meterReadingEntity);
                 _logger.LogInformation("Successfully updated meter reading with ID {Id}.", id);
 
-                return NoContent();
-            }
+            return NoContent();
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating meter reading with ID {Id}.", id);
@@ -134,19 +135,19 @@ namespace Meters.Controllers
             try
             {
                 _logger.LogInformation("Fetching meter reading with ID {Id} for deletion.", id);
-                var meterReadingExists = await _meterReadingService.MeterReadingExists(id);
-                if (!meterReadingExists)
-                {
+            var meterReadingExists = await _meterReadingService.MeterReadingExists(id);
+            if (!meterReadingExists)
+            {
                     _logger.LogWarning("Meter reading with ID {Id} not found for deletion.", id);
-                    return NotFound();
-                }
+                return NotFound();
+            }
 
                 _logger.LogInformation("Deleting meter reading with ID {Id}.", id);
-                await _meterReadingService.DeleteMeterReading(id);
+            await _meterReadingService.DeleteMeterReading(id);
                 _logger.LogInformation("Successfully deleted meter reading with ID {Id}.", id);
 
-                return NoContent();
-            }
+            return NoContent();
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting meter reading with ID {Id}.", id);

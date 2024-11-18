@@ -88,9 +88,9 @@ namespace Business
             try
             {
                 _logger.LogInformation("Adding a new meter.");
-                await _meterRepository.AddMeter(meter);
+            await _meterRepository.AddMeter(meter);
                 _logger.LogInformation("Successfully added a new meter.");
-            }
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while adding a new meter.");
@@ -103,9 +103,9 @@ namespace Business
             try
             {
                 _logger.LogInformation("Updating meter with ID {Id}.", meter.Id);
-                await _meterRepository.UpdateMeter(meter);
+            await _meterRepository.UpdateMeter(meter);
                 _logger.LogInformation("Successfully updated meter with ID {Id}.", meter.Id);
-            }
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating meter with ID {Id}.", meter.Id);
@@ -118,9 +118,9 @@ namespace Business
             try
             {
                 _logger.LogInformation("Deleting meter with ID {Id}.", id);
-                await _meterRepository.DeleteMeter(id);
+            await _meterRepository.DeleteMeter(id);
                 _logger.LogInformation("Successfully deleted meter with ID {Id}.", id);
-            }
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting meter with ID {Id}.", id);
@@ -128,12 +128,12 @@ namespace Business
             }
         }
 
-        public async Task<bool> MeterExists(int id)
+        public async Task<bool> MeterExists(int id) 
         {
             try
             {
                 _logger.LogInformation("Checking if meter with ID {Id} exists.", id);
-                var meter = await _meterRepository.GetMeterById(id);
+            var meter = await _meterRepository.GetMeterById(id);
                 bool exists = meter != null;
                 if (exists)
                 {

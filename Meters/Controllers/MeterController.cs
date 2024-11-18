@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.Interfaces;
-using Core.Models;
+using Core.Models; 
 using Meters.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -32,11 +32,11 @@ namespace Meters.Controllers
             try
             {
                 _logger.LogInformation("Fetching all meters.");
-                var meters = await _meterService.GetAllMeters();
-                var meterViewModels = _mapper.Map<IEnumerable<MeterViewModel>>(meters);
+            var meters = await _meterService.GetAllMeters();
+            var meterViewModels = _mapper.Map<IEnumerable<MeterViewModel>>(meters);
                 _logger.LogInformation("Successfully fetched all meters.");
-                return Ok(meterViewModels);
-            }
+            return Ok(meterViewModels);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving meters.");
@@ -73,17 +73,17 @@ namespace Meters.Controllers
             try
             {
                 _logger.LogInformation("Fetching meter with ID {Id}.", id);
-                var meter = await _meterService.GetMeterById(id);
-                if (meter == null)
-                {
+            var meter = await _meterService.GetMeterById(id);
+            if (meter == null)
+            {
                     _logger.LogWarning("Meter with ID {Id} not found.", id);
-                    return NotFound();
-                }
-
-                var meterViewModel = _mapper.Map<MeterViewModel>(meter);
-                _logger.LogInformation("Successfully fetched meter with ID {Id}.", id);
-                return Ok(meterViewModel);
+                return NotFound();
             }
+
+            var meterViewModel = _mapper.Map<MeterViewModel>(meter);
+                _logger.LogInformation("Successfully fetched meter with ID {Id}.", id);
+            return Ok(meterViewModel);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving meter with ID {Id}.", id);
@@ -97,19 +97,19 @@ namespace Meters.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
+            if (!ModelState.IsValid)
+            {
                     _logger.LogWarning("Invalid model state while creating a new meter.");
-                    return BadRequest(ModelState);
-                }
+                return BadRequest(ModelState);
+            }
 
                 _logger.LogInformation("Creating a new meter.");
-                var meterEntity = _mapper.Map<Meter>(meterViewModel);
-                await _meterService.AddMeter(meterEntity);
+            var meterEntity = _mapper.Map<Meter>(meterViewModel);
+            await _meterService.AddMeter(meterEntity);
                 _logger.LogInformation("Successfully created a new meter.");
 
-                return CreatedAtAction(nameof(GetMeter), new { id = meterEntity.Id }, meterViewModel);
-            }
+            return CreatedAtAction(nameof(GetMeter), new { id = meterEntity.Id }, meterViewModel);
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating a new meter.");
@@ -117,31 +117,33 @@ namespace Meters.Controllers
             }
         }
 
+
+
         // PUT: api/meter/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMeter(int id, [FromBody] MeterViewModel meterViewModel)
         {
             try
             {
-                if (id != meterViewModel.Id)
-                {
+            if (id != meterViewModel.Id)
+            {
                     _logger.LogWarning("Meter ID mismatch. URL ID {Id} does not match model ID {ModelId}.", id, meterViewModel.Id);
                     return BadRequest("Meter ID mismatch.");
-                }
+            }
 
-                if (!ModelState.IsValid)
-                {
+            if (!ModelState.IsValid)
+            {
                     _logger.LogWarning("Invalid model state while updating meter with ID {Id}.", id);
-                    return BadRequest(ModelState);
-                }
+                return BadRequest(ModelState);
+            }
 
                 _logger.LogInformation("Updating meter with ID {Id}.", id);
-                var meterEntity = _mapper.Map<Meter>(meterViewModel);
-                await _meterService.UpdateMeter(meterEntity);
+            var meterEntity = _mapper.Map<Meter>(meterViewModel);
+            await _meterService.UpdateMeter(meterEntity);
                 _logger.LogInformation("Successfully updated meter with ID {Id}.", id);
 
-                return NoContent();
-            }
+            return NoContent();
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating meter with ID {Id}.", id);
@@ -156,19 +158,19 @@ namespace Meters.Controllers
             try
             {
                 _logger.LogInformation("Fetching meter with ID {Id} for deletion.", id);
-                var meterExists = await _meterService.MeterExists(id);
-                if (!meterExists)
-                {
+            var meterExists = await _meterService.MeterExists(id);
+            if (!meterExists)
+            {
                     _logger.LogWarning("Meter with ID {Id} not found for deletion.", id);
-                    return NotFound();
-                }
+                return NotFound();
+            }
 
                 _logger.LogInformation("Deleting meter with ID {Id}.", id);
-                await _meterService.DeleteMeter(id);
+            await _meterService.DeleteMeter(id);
                 _logger.LogInformation("Successfully deleted meter with ID {Id}.", id);
 
-                return NoContent();
-            }
+            return NoContent();
+        }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting meter with ID {Id}.", id);
