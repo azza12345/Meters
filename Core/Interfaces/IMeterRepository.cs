@@ -7,7 +7,7 @@ namespace Core.Interfaces
 {
     public interface IMeterRepository
     {
-        Task<IEnumerable<Meter>> GetAllMeters(); // Make sure this is public
+        Task<IEnumerable<Meter>> GetAllMeters(); 
         Task<Meter> GetMeterById(int id);
         Task AddMeter(Meter meter);
         Task UpdateMeter(Meter meter);

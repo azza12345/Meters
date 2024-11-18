@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
-using Infrastructure.Entities; // Make sure this points to the right namespace for your entities
+using Core.Interfaces;
+using Core.Models;
 using MetersMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Core.Logging;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Business;
-using Core.Models;
 
 namespace MetersMVC.Controllers
 {
@@ -13,120 +15,240 @@ namespace MetersMVC.Controllers
     {
         private readonly IMeterReadingService _meterReadingService;
         private readonly IMapper _mapper;
+      //  private readonly ILogger<MeterReadingController> _logger;
+     // private readonly Core.Logging.ILogger _logger;
 
-        public MeterReadingController(IMeterReadingService meterReadingService, IMapper mapper)
+        public MeterReadingController(IMeterReadingService meterReadingService, IMapper mapper, ILogger<MeterReadingController> logger)
         {
             _meterReadingService = meterReadingService;
             _mapper = mapper;
+          //  _logger = logger;
         }
 
-        // GET: MeterReading
+        /// <summary>
+        /// Retrieves a list of all meter readings.
+        /// </summary>
+        /// <returns>Returns a view displaying the list of meter readings.</returns>
         public async Task<IActionResult> Index()
         {
-            // Fetch all meter readings from the service
-            var meterReadings = await _meterReadingService.GetAllMeterReadings();
-
-            // Map to the view model using AutoMapper
-            var meterReadingViewModels = _mapper.Map<List<MeterReadingViewModel>>(meterReadings);
-
-            // Return the view with the mapped view models
-            return View(meterReadingViewModels);
-        }
-
-
-        // GET: MeterReading/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: MeterReading/Create
-        [HttpPost]
-        public async Task<IActionResult> Create(MeterReadingViewModel model)
-        {
-            if (ModelState.IsValid)
+            try
             {
-                // Map the view model to your business model
-                var reading = _mapper.Map<MeterReading>(model);
+              //  _logger.LogInformation("Fetching all meter readings.");
+                var readings = await _meterReadingService.GetAllMeterReadings();
+                var readingViewModels = _mapper.Map<List<MeterReadingViewModel>>(readings);
+                //  _logger.LogInformation("Successfully fetched all meter readings.");
+                
+               
 
-                // Call your service to add the reading (you need to implement this)
-                await _meterReadingService.AddMeterReading(reading);
-
-                return RedirectToAction("Index"); // Redirect to the index or wherever you want
+                return View(readingViewModels);
             }
-
-            return View(model); // Return the view with the model if validation fails
-        }
-
-
-        // GET: MeterReading/Edit/{id}
-        public async Task<IActionResult> Edit(int id)
-        {
-            var meterReadingEntity = await _meterReadingService.GetMeterReadingById(id);
-            if (meterReadingEntity == null)
+            catch (Exception ex)
             {
-                return NotFound();
+               // _logger.LogError(ex, "Error occurred while fetching meter readings.");
+                return RedirectToAction("Error", new { message = "An error occurred while retrieving meter readings." });
             }
-
-            var meterReadingViewModel = _mapper.Map<MeterReadingViewModel>(meterReadingEntity);
-            return View(meterReadingViewModel);
         }
 
-        // POST: MeterReading/Edit/{id}
+        /// <summary>
+        /// Retrieves details of a specific meter reading.
+        /// </summary>
+        /// <param name="id">The ID of the meter reading.</param>
+        /// <returns>Returns a view displaying the details of the meter reading.</returns>
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+               // _logger.LogInformation("Fetching details for meter reading with ID {Id}.", id);
+                var reading = await _meterReadingService.GetMeterReadingById(id);
+                if (reading == null)
+                {
+                   // _logger.LogWarning("Meter reading with ID {Id} not found.", id);
+                    return NotFound();
+                }
+
+                var readingViewModel = _mapper.Map<MeterReadingViewModel>(reading);
+               // _logger.LogInformation("Successfully fetched details for meter reading with ID {Id}.", id);
+                return View(readingViewModel);
+            }
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex, "Error occurred while fetching details for meter reading with ID {Id}.", id);
+                return RedirectToAction("Error", new { message = "An error occurred while retrieving the meter reading details." });
+            }
+        }
+
+        /// <summary>
+        /// Displays the create meter reading form.
+        /// </summary>
+        /// <param name="meterId">The ID of the meter associated with the new reading.</param>
+        /// <returns>Returns a view for creating a new meter reading.</returns>
+        public IActionResult Create(int meterId)
+        {
+           // _logger.LogInformation("Displaying create meter reading form for meter ID {MeterId}.", meterId);
+            var readingViewModel = new MeterReadingViewModel
+            {
+                MeterId = meterId // Set the MeterId for the reading
+            };
+            return View(readingViewModel);
+        }
+
+        /// <summary>
+        /// Processes the creation of a new meter reading.
+        /// </summary>
+        /// <param name="readingViewModel">The view model containing meter reading data.</param>
+        /// <returns>Redirects to the Index page if successful, otherwise reloads the create view with validation errors.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, MeterReadingViewModel meterReadingViewModel)
+        public async Task<IActionResult> Create(MeterReadingViewModel readingViewModel)
         {
-            if (id != meterReadingViewModel.Id)
+            try
             {
-                return BadRequest();
-            }
+                if (ModelState.IsValid)
+                {
+                   // _logger.LogInformation("Creating a new meter reading.");
+                    var reading = _mapper.Map<MeterReading>(readingViewModel);
+                    await _meterReadingService.AddMeterReading(reading);
+                  //  _logger.LogInformation("Successfully created a new meter reading.");
+                    return RedirectToAction(nameof(Index));
+                }
 
-            if (ModelState.IsValid)
+              //  _logger.LogWarning("Model state invalid while creating a new meter reading.");
+                return View(readingViewModel);
+            }
+            catch (Exception ex)
             {
-                // Map MeterReadingViewModel to the Core.Models.MeterReading
-                var meterReading = _mapper.Map<MeterReading>(meterReadingViewModel);
-
-                // Call the service with the correctly mapped entity
-                await _meterReadingService.UpdateMeterReading(meterReading);
-
-                return RedirectToAction(nameof(Index));
+               // _logger.LogError(ex, "Error occurred while creating a new meter reading.");
+                return RedirectToAction("Error", new { message = "An error occurred while creating the meter reading." });
             }
-
-            return View(meterReadingViewModel);
         }
 
-        // GET: MeterReading/Delete/{id}
+        /// <summary>
+        /// Displays the edit form for a specific meter reading.
+        /// </summary>
+        /// <param name="id">The ID of the meter reading to edit.</param>
+        /// <returns>Returns a view with the meter reading data pre-populated for editing.</returns>
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+               // _logger.LogInformation("Fetching meter reading with ID {Id} for editing.", id);
+                var reading = await _meterReadingService.GetMeterReadingById(id);
+                if (reading == null)
+                {
+                   // _logger.LogWarning("Meter reading with ID {Id} not found for editing.", id);
+                    return NotFound();
+                }
+
+                var readingViewModel = _mapper.Map<MeterReadingViewModel>(reading);
+               // _logger.LogInformation("Displaying edit form for meter reading with ID {Id}.", id);
+                return View(readingViewModel);
+            }
+            catch (Exception ex)
+            {
+              //  _logger.LogError(ex, "Error occurred while fetching meter reading for editing.");
+                return RedirectToAction("Error", new { message = "An error occurred while retrieving the meter reading for editing." });
+            }
+        }
+
+        /// <summary>
+        /// Processes the update of an existing meter reading.
+        /// </summary>
+        /// <param name="id">The ID of the meter reading to update.</param>
+        /// <param name="readingViewModel">The view model containing updated meter reading data.</param>
+        /// <returns>Redirects to the Index page if successful, otherwise reloads the edit view with validation errors.</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, MeterReadingViewModel readingViewModel)
+        {
+            try
+            {
+                if (id != readingViewModel.Id)
+                {
+                  //  _logger.LogWarning("Meter reading ID mismatch: URL ID {Id} does not match form ID {FormId}.", id, readingViewModel.Id);
+                    return NotFound();
+                }
+
+                if (ModelState.IsValid)
+                {
+                   // _logger.LogInformation("Updating meter reading with ID {Id}.", id);
+                    var reading = _mapper.Map<MeterReading>(readingViewModel);
+                    await _meterReadingService.UpdateMeterReading(reading);
+                  //  _logger.LogInformation("Successfully updated meter reading with ID {Id}.", id);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                //_logger.LogWarning("Model state invalid while editing meter reading with ID {Id}.", id);
+                return View(readingViewModel);
+            }
+            catch (Exception ex)
+            {
+              //  _logger.LogError(ex, "Error occurred while updating meter reading with ID {Id}.", id);
+                return RedirectToAction("Error", new { message = "An error occurred while updating the meter reading." });
+            }
+        }
+
+        /// <summary>
+        /// Displays the delete confirmation view for a specific meter reading.
+        /// </summary>
+        /// <param name="id">The ID of the meter reading to delete.</param>
+        /// <returns>Returns a view for confirming the deletion of the meter reading.</returns>
         public async Task<IActionResult> Delete(int id)
         {
-            var meterReadingEntity = await _meterReadingService.GetMeterReadingById(id);
-            if (meterReadingEntity == null)
+            try
             {
-                return NotFound();
-            }
+               // _logger.LogInformation("Fetching meter reading with ID {Id} for deletion.", id);
+                var reading = await _meterReadingService.GetMeterReadingById(id);
+                if (reading == null)
+                {
+                   // _logger.LogWarning("Meter reading with ID {Id} not found for deletion.", id);
+                    return NotFound();
+                }
 
-            var meterReadingViewModel = _mapper.Map<MeterReadingViewModel>(meterReadingEntity);
-            return View(meterReadingViewModel);
+                var readingViewModel = _mapper.Map<MeterReadingViewModel>(reading);
+              //  _logger.LogInformation("Displaying delete confirmation view for meter reading with ID {Id}.", id);
+                return View(readingViewModel);
+            }
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex, "Error occurred while fetching meter reading for deletion.");
+                return RedirectToAction("Error", new { message = "An error occurred while retrieving the meter reading for deletion." });
+            }
         }
 
-        // POST: MeterReading/Delete/{id}
+        /// <summary>
+        /// Confirms and processes the deletion of a specific meter reading.
+        /// </summary>
+        /// <param name="id">The ID of the meter reading to delete.</param>
+        /// <returns>Redirects to the Index page if successful.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _meterReadingService.DeleteMeterReading(id);
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        public IActionResult AddReading(int meterId)
-        {
-            var model = new MeterReadingViewModel
+            try
             {
-                MeterId = meterId
-            };
-            return View(model);
+              //  _logger.LogInformation("Deleting meter reading with ID {Id}.", id);
+                await _meterReadingService.DeleteMeterReading(id);
+              //  _logger.LogInformation("Successfully deleted meter reading with ID {Id}.", id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex, "Error occurred while deleting meter reading with ID {Id}.", id);
+                return RedirectToAction("Error", new { message = "An error occurred while deleting the meter reading." });
+            }
         }
 
+        /// <summary>
+        /// Displays the error view with a custom message.
+        /// </summary>
+        /// <param name="message">The error message to display.</param>
+        /// <returns>Returns an error view with the message.</returns>
+        public IActionResult Error(string message)
+        {
+          //  _logger.LogError("MetersController: Error action triggered with message: {ErrorMessage}", message);
+
+            ViewBag.ErrorMessage = message;
+            return View();
+        }
     }
 }

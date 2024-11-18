@@ -2,7 +2,7 @@ using MetersMvs.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace MetersMvs.Controllers
+namespace MetersMVC.Controllers
 {
     public class HomeController : Controller
     {

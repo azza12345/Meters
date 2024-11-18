@@ -21,7 +21,12 @@ namespace MetersMVC
           .ForMember(dest => dest.Meter, opt => opt.Ignore());
 
             CreateMap<MeterReadingViewModel, MeterReading>().ReverseMap();
-            
+
+
+            CreateMap<MeterEntity, Meter>()
+           .ReverseMap();
+
+          
 
         }
     }

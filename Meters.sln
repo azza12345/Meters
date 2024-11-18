@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meters", "Meters\Meters.csproj", "{40730968-942F-42CB-969C-F9B496987C1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meters", "Meters\Meters.csproj", "{40730968-942F-42CB-969C-F9B496987C1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{70ACC448-C154-4128-BC81-5392DCA0BC1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{70ACC448-C154-4128-BC81-5392DCA0BC1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{C14C91DB-D60B-4120-BB6A-27D6863BEF61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{C14C91DB-D60B-4120-BB6A-27D6863BEF61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{14A400DD-C537-4269-9437-13080264DBB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{14A400DD-C537-4269-9437-13080264DBB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetersMVC", "MetersMvs\MetersMVC.csproj", "{C57C462F-0936-45EB-8D47-2773AD29DDED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetersMVC", "MetersMvs\MetersMVC.csproj", "{C57C462F-0936-45EB-8D47-2773AD29DDED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMetersMVC", "TestMetersMVC\TestMetersMVC.csproj", "{95AC128A-9216-4ED1-8D82-B8019E386429}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C57C462F-0936-45EB-8D47-2773AD29DDED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C57C462F-0936-45EB-8D47-2773AD29DDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C57C462F-0936-45EB-8D47-2773AD29DDED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95AC128A-9216-4ED1-8D82-B8019E386429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95AC128A-9216-4ED1-8D82-B8019E386429}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95AC128A-9216-4ED1-8D82-B8019E386429}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95AC128A-9216-4ED1-8D82-B8019E386429}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

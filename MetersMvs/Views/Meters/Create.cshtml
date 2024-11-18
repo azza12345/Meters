@@ -1,5 +1,5 @@
 ﻿@using MetersMVC.ViewModels
-@model Meters.ViewModels.MeterViewModel
+@model MetersMVC.ViewModels.MeterViewModel
 
 @{
     ViewData["Title"] = "Create Meter";
@@ -8,6 +8,7 @@
 <h1>Create Meter</h1>
 
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="Type"></label>
         <input asp-for="Type" class="form-control" />

@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<MetersMVC.ViewModels.MeterReadingViewModel>
 
-<!-- Bootstrap styling for table -->
 <div class="container mt-4">
     <h2 class="text-center mb-4">Meter Readings</h2>
 
@@ -10,6 +9,7 @@
                 <th>Reading</th>
                 <th>Reading Date</th>
                 <th>Meter ID</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,14 +19,21 @@
                     <td>@reading.Reading</td>
                     <td>@reading.ReadingDate.ToString("dd-MM-yyyy")</td>
                     <td>@reading.MeterId</td>
+                    <td>
+                        <!-- Use the asp-controller and asp-action attributes to create a dynamic URL -->
+                        <a asp-controller="MeterReading" asp-action="Edit" asp-route-id="@reading.Id" class="btn btn-warning btn-sm">Edit</a>
+
+                        <form asp-action="Delete" asp-controller="MeterReading" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@reading.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <!-- Back to List button with styling -->
     <div class="text-center mt-4">
-        <a href="https://localhost:7023/Meters" class="btn btn-primary btn-lg">Back to Meters List</a>
+        <a asp-controller="Meters" asp-action="Index" class="btn btn-primary btn-lg">Back to Meters List</a>
     </div>
 </div>
-
