@@ -8,6 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Serilog;
 using Core.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace MetersMVC
 {
@@ -21,6 +28,48 @@ namespace MetersMVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+          
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            builder.Services.AddAuthentication(options =>
+            {
+               // options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+ .AddJwtBearer(options =>
+ {
+     var key = builder.Configuration["Jwt:Key"];
+     if (string.IsNullOrEmpty(key))
+     {
+         throw new ArgumentNullException("Jwt:Key", "JWT key is not configured.");
+     }
+
+     options.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuer = true,
+         ValidateAudience = true,
+         ValidateLifetime = true,
+         ValidIssuer = builder.Configuration["Jwt:Issuer"],
+         ValidAudience = builder.Configuration["Jwt:Audience"],
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+     };
+ });
+
+
+           //builder.Services.AddDbContext<MeterDbContext>(options =>
+           // options.UseInMemoryDatabase("TestDb"));
+
+
+            builder.Services.AddHttpContextAccessor();
+
 
             Log.Logger = new LoggerConfiguration()
               .ReadFrom.Configuration(builder.Configuration)
@@ -68,11 +117,45 @@ namespace MetersMVC
           new Logger(LoggingDestination.Seq));
 
             builder.Services.AddHttpClient();
-           
+
+          
+
+            builder.Services.AddHttpContextAccessor(); 
+           // builder.Services.AddControllersWithViews();
 
 
+            builder.Services.AddDistributedMemoryCache();
+
+            // builder.Services.AddControllersWithViews(options =>
+            // {
+            //    options.Filters.Add<RequireAuthorizationAttribute>(); 
+            //});
+            //  builder.Services.AddSession();
+
+            builder.Services.AddDistributedMemoryCache();  
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true; 
+            });
+
+            builder.Services.AddControllersWithViews(options =>
+            {
+             //   options.Filters.Add<RequireAuthorizationAttribute>(); 
+            });
+
+
+            builder.Services.AddControllers();
+            builder.Services.AddDbContext<MeterDbContext>(options =>
+                options.UseInMemoryDatabase("TestDb"));
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<MeterDbContext>()
+                .AddDefaultTokenProviders();
+            builder.Services.AddDistributedMemoryCache();
 
             var app = builder.Build();
+
+           
 
             // Initialize LoggerHelper with the custom Logger instance
             var logger = app.Services.GetRequiredService<Core.Logging.ILogger>();
@@ -89,17 +172,23 @@ namespace MetersMVC
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseHttpsRedirection(); // Redirects to HTTPS early in the pipeline
+            app.UseStaticFiles();       // Serves static files
 
-            app.UseRouting();
+            app.UseRouting();           // Sets up routing
+
+            app.UseSession();           // Enables session before authentication and authorization
+            app.UseAuthentication();    // Ensures authentication middleware can access session if needed
+            app.UseAuthorization();     // Applies authorization rules
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers(); // Maps controllers
             });
 
 
-            app.UseAuthorization();
+
+
 
             app.MapControllerRoute(
                 name: "default",

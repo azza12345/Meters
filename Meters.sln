@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetersMVC", "MetersMvs\MetersMVC.csproj", "{C57C462F-0936-45EB-8D47-2773AD29DDED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMetersMVC", "TestMetersMVC\TestMetersMVC.csproj", "{95AC128A-9216-4ED1-8D82-B8019E386429}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestMetersMVC", "TestMetersMVC\TestMetersMVC.csproj", "{95AC128A-9216-4ED1-8D82-B8019E386429}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,7 +42,6 @@ Global
 		{C57C462F-0936-45EB-8D47-2773AD29DDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C57C462F-0936-45EB-8D47-2773AD29DDED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{95AC128A-9216-4ED1-8D82-B8019E386429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95AC128A-9216-4ED1-8D82-B8019E386429}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95AC128A-9216-4ED1-8D82-B8019E386429}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95AC128A-9216-4ED1-8D82-B8019E386429}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

@@ -13,6 +13,16 @@ namespace MetersMVC.Controllers
             _logger = logger;
         }
 
+
+
+        public IActionResult AuthError(string message)
+        {
+            
+            Console.WriteLine($"Redirected to AuthError with message: {message}");
+            ViewBag.Message = message;
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();

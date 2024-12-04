@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Core.Models
@@ -14,4 +15,14 @@ namespace Core.Models
         public int? MeterId { get; set; }  
         public Meter? Meter { get; set; }
     }
+
+    public class TokenResponse
+    {
+        [JsonPropertyName("$id")]
+        public string Id { get; set; }
+
+        [JsonPropertyName("token")]
+        public string Token { get; set; }
+    }
+
 }
